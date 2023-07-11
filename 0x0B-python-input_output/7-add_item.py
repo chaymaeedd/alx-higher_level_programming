@@ -1,27 +1,32 @@
+import json
+
+# Create a Python list
+my_list = ["item1", "item2", "item3"]
+
+# Convert the list to a JSON-formatted string
+json_string = json.dumps(my_list)
+
+# Open the file in write mode and write the JSON string to it
+with open("add_item.json", "w") as file:
+    file.write(json_string)
+
 #!/usr/bin/python3
 """
-Script that adds all arguments to a Python list and saves them to a file.
+Script that adds all arguments to a Python list, and then saves them to a file
 """
 
-import sys
-import os.path
-from typing import List
-save_to_json_file = __import__('5-save_to_json_file').save_to_json_file
-load_from_json_file = __import__('6-load_from_json_file').load_from_json_file
+from sys import argv
+save_to_json_file = __import__("5-save_to_json_file").save_to_json_file
+load_from_json_file = __import__("6-load_from_json_file").load_from_json_file
 
-def add_item(args: List[str]) -> List[str]:
-    """
-    Adds all arguments to a Python list.
-    """
-    filename = "add_item.json"
-    items = []
-    if os.path.exists(filename):
-        items = load_from_json_file(filename)
-    items += args
-    save_to_json_file(items, filename)
-    return items
+filename = "add_item.json"
 
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    add_item(args)
+try:
+    json_list = load_from_json_file(filename)
+except FileNotFoundError:
+    json_list = []
 
+for arg in argv[1:]:
+    json_list.append(arg)
+
+save_to_json_file(json_list, filename)
